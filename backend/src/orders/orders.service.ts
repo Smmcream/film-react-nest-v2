@@ -3,39 +3,43 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { FilmsRepository } from '../films/films.repository';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Session } from '../entities/session.entity';
 
 @Injectable()
 export class OrdersService {
-  constructor(private readonly filmsRepository: FilmsRepository) {}
+  constructor(
+    @InjectRepository(Session)
+    private sessionRepository: Repository<Session>,
+  ) {}
 
-  async create(createOrderDto: CreateOrderDto) {
-    const { filmId, sessionId, seats } = createOrderDto;
+  async createOrder(sessionId: string, seats: { row: number; seat: number }[]) {
+    console.log('👉 sessionId:', sessionId);
+    const session = await this.sessionRepository.findOne({
+      where: { id: sessionId },
+    });
 
-    const sessionExists = await this.filmsRepository.findSession(
-      filmId,
-      sessionId,
-    );
-    if (!sessionExists) {
-      throw new NotFoundException('Фильм или сеанс не найден');
+    if (!session) {
+      throw new NotFoundException('Сеанс не найден');
     }
 
-    const booked = await this.filmsRepository.bookSeats(
-      filmId,
-      sessionId,
-      seats,
+    const seatsToBook = seats.map((seat) => `${seat.row}:${seat.seat}`);
+    const alreadyBooked = seatsToBook.some((seat) =>
+      session.taken.includes(seat),
     );
-    if (!booked) {
+
+    if (alreadyBooked) {
       throw new ConflictException('Некоторые места уже забронированы');
     }
 
+    session.taken.push(...seatsToBook);
+    await this.sessionRepository.save(session);
+
     return {
       message: 'Билеты успешно забронированы',
-      filmId,
       sessionId,
       seats,
-      bookingTime: new Date().toISOString(),
     };
   }
 }
