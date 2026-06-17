@@ -38,9 +38,9 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./backend
-                                                ush: tru                                 Y }}/${{ env.REPO_LOWER }}-backend:latest
+          file: ./backend/Dockerfile
+          push: tru          push: tru          puTRY }  ${{ env.REPO_LOWER }}-backend:latest
 
-      - name:      - name: h       - name:      - name: h       - nah-a  ion      - name: th:
-                      ronte                      rontend/Dockerfile
-          push: true
-                       .REGISTRY }}/${{ env.REPO_LOWER }}-frontend:latest
+      - name: Build and push       - name: Build and push       - nah-a   on      - name: Buil               - name: Bntend
+          file: ./frontend/Dockerfile
+                               tags: ${{ env.REGISTRY }}/${{ env.REPO_LOWER }}-frontend:latest
