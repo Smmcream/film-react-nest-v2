@@ -71,8 +71,12 @@ describe('FilmsController', () => {
     });
 
     it('should throw NotFoundException if film not found', async () => {
-      jest.spyOn(service, 'findSchedule').mockRejectedValueOnce(new NotFoundException());
-      await expect(controller.findSchedule('999')).rejects.toThrow(NotFoundException);
+      jest
+        .spyOn(service, 'findSchedule')
+        .mockRejectedValueOnce(new NotFoundException());
+      await expect(controller.findSchedule('999')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 });
