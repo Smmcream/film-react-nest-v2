@@ -1,0 +1,19 @@
+# Heavy files
+*.jpg
+*.png
+*.svg
+*.ttf
+*.woff
+*.woff2
+*.eot
+backend/public/content/
+frontend/public/fonts/
+frontend/src/assets/
+
+# Dependencies
+node_modules/
+dist/
+
+# Environment
+.env
+.env.local
