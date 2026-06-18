@@ -16,7 +16,7 @@ import { Session } from './entities/session.entity';
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'public'),
-      serveRoot: '/content/afisha',
+      serveRoot: '/',
     }),
     TypeOrmModule.forRoot({
       type: 'postgres',

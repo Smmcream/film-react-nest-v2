@@ -1,0 +1,62 @@
+services:
+  db:
+    image: postgres:15
+    container_name: film_db
+    environment:
+      POSTGRES_USER: filmuser
+      POSTGRES_PASSWORD: filmpass
+      POSTGRES_DB: filmdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - film_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: film_backend
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USERNAME: filmuser
+      DATABASE_PASSWORD: filmpass
+      DATABASE_NAME: filmdb
+      LOGGER_TYPE: dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    networks:
+      - film_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: film_frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - film_network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: film_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    networks:
+      - film_network
+
+volumes:
+  postgres_data:
+
+networks:
+  film_network:
