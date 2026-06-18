@@ -15,7 +15,7 @@ WORKDIR /app
 COPY --from=build /app/dist ./dist
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package*.json ./
-COPY --from=build /app/public ./public   # ← добавить только эту строку
+COPY --from=build /app/public ./public
 
 EXPOSE 3000
 
