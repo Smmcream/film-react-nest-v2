@@ -154,8 +154,8 @@ export class FilmAPI extends Api implements IFilmAPI {
         const data = await this._get<Movie[]>('/films');
         return data.map((item) => ({
             ...item,
-            image: this.cdn + item.image,
-            cover: this.cdn + item.cover,
+            image: item.image,
+            cover: item.cover,
         }));
     }
 
